@@ -1,0 +1,21 @@
+""" Path datos y nombre archivo de datos"""
+
+#PATH ASCAT:
+ftp://podaac.jpl.nasa.gov/allData/ascat/preview/L2/metop_a/25km/YYYY/DDD
+
+This directory contains the source data for the 25-km ASCAT dataset.
+
+YYYY = 4-Digit Year
+DDD  = 3-Digit Day of Year
+
+
+represents a complete satellite orbit, beginning with the ascending node at the
+equator, and ending at the next ascending node near the equator. 
+
+The file naming
+convention is as follows:
+
+ascat_YYYYMMDD_HHMMSS_metopa_ORBIT_SRV_T_SMPL_CONT.l2.nc.gz
+
+ASCAT Wind Product User Manual, http://www.osi-saf.org/, http://www.knmi.nl/scatterometer/
+
