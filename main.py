@@ -2,7 +2,7 @@
 
 import argparse 
 import satellite
-import DateTime
+import datetime
 
 def construct_site_list(not_in_list):
 
@@ -17,29 +17,30 @@ def plot_data_matrix(data_matrix):
 def main():
   
 	#define parser data
-    #ACLARAR BIEN QUe ESTAMOS SUBIENDO Y EN QUE FORMATO
     parser = argparse.ArgumentParser(description='Plotting satellite data.')
+    #first arguments. Dates. TODO:SPECIFY INITIAL AND FINAL ORDER
     parser.add_argument('date', metavar='date_time_YYYY.MM.DD', type=str, nargs=2,\
 		      help='time interval')
+    #specify sattelites to exclude from command line. TODO: change to flag!
     parser.add_argument('satellite', metavar='SATELLITE_NAME', type=str, nargs='?',\
 		      help='satellite name')
 
     args=parser.parse_args()
     initialDate = args.date[0]
     finalDate = args.date[1]
-
+    
+    #construct list of satellites to exclude
     if not args.satellite:
         not_in_list = []
     else:
         not_in_list = args.satellite.split('+')
     
+    #construct definite list
     sites = construct_site_list(not_in_list)
     
     ascat = satellite.ASCAT(initialDate, finalDate)
-    ascat.convert_to_day_of_the_year()
-    print ascat.initial_time,ascat.final_time
-    #print ascat.initial_time, ascat.final_time
-    
+    ascat.convert_to_datetime()
+    ascat.download_files()
     for site in sites:
         pass
         #a_satellite = satellite.Satellite(args.satellite[0],initialDate, finalDate)
