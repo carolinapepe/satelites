@@ -14,6 +14,11 @@ def plot_data_matrix(data_matrix):
     pass
 
 
+# Clean working environment (should be called before main)
+def clean():
+    import os
+    os.system("rm -f /tmp/*.gz /tmp/*.nc")
+
 def main():
   
 	#define parser data
@@ -38,15 +43,16 @@ def main():
     #construct definite list
     sites = construct_site_list(not_in_list)
     
+    #ASCAT implementation. 
     ascat = satellite.ASCAT(initialDate, finalDate)
     ascat.convert_to_datetime()
     ascat.download_files()
+    
+    #future implementation for several satellites
     for site in sites:
         pass
         #a_satellite = satellite.Satellite(args.satellite[0],initialDate, finalDate)
-    
-    
 
 if __name__ == "__main__":
+    clean()
     main()  
-       
