@@ -3,7 +3,11 @@
 import argparse 
 import satellite
 import datetime
-
+from mpl_toolkits.basemap import Basemap
+import matplotlib.pyplot as plt
+import glob
+import os.path
+    
 def construct_site_list(not_in_list):
 
     all_sites = ['ASCAT', 'OTROSAT','OTROSAT2']
@@ -46,13 +50,34 @@ def main():
     #ASCAT implementation. 
     ascat = satellite.ASCAT(initialDate, finalDate)
     ascat.convert_to_datetime()
-    ascat.download_files()
+    #ascat.download_files()
     
+    # Figure
+    m = Basemap(projection='merc',llcrnrlat=-80,urcrnrlat=80,\
+            llcrnrlon=0,urcrnrlon=360,lat_ts=20,resolution='c')
+    
+    # Color bar
+    #
+    cmap = plt.cm.jet
+    # extract all colors from the .jet map
+    cmaplist = [cmap(i) for i in range(cmap.N)]
+    # force the first color entry to be grey
+    cmaplist[0] = (.5,.5,.5,0.0)
+    # create the new map
+    cmap = cmap.from_list('Custom cmap', cmaplist, cmap.N)
+    
+    for src_name in glob.glob(os.path.join("/tmp", '*.nc')):
+        base = os.path.basename(src_name)
+        ascat.plot_data(src_name, m,cmap)
+        
+    plt.title('Sfc Wind Speed') #agregar fecha y dato del satelite
+
+    plt.show()
     #future implementation for several satellites
-    for site in sites:
-        pass
+    #for site in sites:
+    #    pass
         #a_satellite = satellite.Satellite(args.satellite[0],initialDate, finalDate)
 
 if __name__ == "__main__":
-    clean()
+    #clean()
     main()  

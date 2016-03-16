@@ -3,6 +3,14 @@ from datetime import timedelta, date
 import urllib
 import lxml.html
 import re
+#all libraries below are for plotting routines
+import netCDF4
+import calendar
+import numpy as np
+from mpl_toolkits.basemap import Basemap
+import matplotlib.pyplot as plt
+from netCDF4 import Dataset
+
 
 def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)+1):
@@ -61,8 +69,64 @@ class ASCAT(Satellite):
             urllib.urlretrieve(fullurl, dest)       
             i = i + 1
 
-    def make_data_matrix(self):
-        pass
+    def plot_data(self, path_to_file, fig_handler, cmap):
+       
+        f=Dataset(path_to_file,"r")
+
+        #extraigo latitudes, longitudes, tiempos
+        #ACA NECESITO COMO INPUT EL NOMBRE DE LAS LATITUDES
+        lat=f.variables["lat"]
+
+        lon=f.variables["lon"]
+
+
+        #extraigo la variable wind speed
+
+        #ACA NECESITO COMO INPUT EL NOMBRE DE LA VAR
+        wind_speed = f.variables["wind_speed"]
+
+        #extraigo y remplazo codigo de dato faltante por NaN
+
+        velviento = f.variables["wind_speed"][:,:]
+
+        faltante=wind_speed._FillValue
+
+        velviento.data[velviento.data==faltante] = np.nan
+
+        #agrego scale factor a las latitudes
+
+        latitudes = lat[:,:]# /lat.scale_factor
+
+        longitudes = lon[:,:]#/lon.scale_factor
+        ntimes,nobs = np.shape(velviento)
+
+        #------------------------------------------
+        #Plot
+
+        # llcrnrlat,llcrnrlon,urcrnrlat,urcrnrlon
+        # are the lat/lon values of the lower left and upper right corners
+        # of the map.
+        # lat_ts is the latitude of true scale.
+        # resolution = 'c' means use crude resolution coastlines.
+        #dibujo costas, etc
+        fig_handler.drawcoastlines()
+        fig_handler.drawstates()
+        fig_handler.drawcountries()
+        fig_handler.drawparallels(np.arange(-90.,91.,30.))
+        fig_handler.drawmeridians(np.arange(0.,360.,60.))
+
+        #sigo tutoriales, proyecto lat y lon
+
+        x,y = fig_handler(longitudes,latitudes)
+
+        bounds = [0,10]
+        cs = fig_handler.pcolor(x,y,velviento.data,cmap=cmap)
+        cb = fig_handler.colorbar(cs,"right", size="5%", pad='2%',\
+            boundaries=bounds)
+        cb.set_label('m/s')
+
+
+
 
 """    
 class OTROSAT(object):
