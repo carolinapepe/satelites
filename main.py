@@ -50,7 +50,7 @@ def main():
     #ASCAT implementation. 
     ascat = satellite.ASCAT(initialDate, finalDate)
     ascat.convert_to_datetime()
-    #ascat.download_files()
+    ascat.download_files()
     
     # Figure
     m = Basemap(projection='merc',llcrnrlat=-80,urcrnrlat=80,\
@@ -59,12 +59,7 @@ def main():
     # Color bar
     #
     cmap = plt.cm.jet
-    # extract all colors from the .jet map
-    cmaplist = [cmap(i) for i in range(cmap.N)]
-    # force the first color entry to be grey
-    cmaplist[0] = (.5,.5,.5,0.0)
-    # create the new map
-    cmap = cmap.from_list('Custom cmap', cmaplist, cmap.N)
+    cmap.set_under((0,0,0,0)) 
     
     for src_name in glob.glob(os.path.join("/tmp", '*.nc')):
         base = os.path.basename(src_name)
@@ -79,5 +74,5 @@ def main():
         #a_satellite = satellite.Satellite(args.satellite[0],initialDate, finalDate)
 
 if __name__ == "__main__":
-    #clean()
+    clean()
     main()  

@@ -40,7 +40,7 @@ class ASCAT(Satellite):
         root_URL = 'http://podaac-opendap.jpl.nasa.gov/opendap/allData/ascat/preview/L2/metop_b/25km/'
         for day in daterange(self.initial_time,self.final_time):
             URL = root_URL + str(day.year) + '/' + str(day.timetuple().tm_yday) + '/'
-            print "Descargando dia {}".format(day.date())
+            print "Downloading data for day {}".format(day.date())
             self.GetNetCDF(URL)
 
     # Extract list of gz files (wouldn't be necessary if FTP was possible)
@@ -66,7 +66,7 @@ class ASCAT(Satellite):
         for item in files:
             fullurl = url+item
             dest = "/tmp/" + item[:-3]
-            print "    Descargando archivo {}".format(i)
+            print "    Downloading file {}".format(i)
             urllib.urlretrieve(fullurl, dest)       
             i = i + 1
 
@@ -92,14 +92,14 @@ class ASCAT(Satellite):
 
         faltante=wind_speed._FillValue
 
-        velviento.data[velviento.data==faltante] = np.nan
+        velviento.data[velviento.data == faltante] = np.nan
+        velviento.data[velviento.data == 0] = np.nan
         print np.nanmax(velviento.data)
         #agrego scale factor a las latitudes
 
         latitudes = lat[:,:]# /lat.scale_factor
 
         longitudes = lon[:,:]#/lon.scale_factor
-        ntimes,nobs = np.shape(velviento)
 
         #------------------------------------------
         #Plot
@@ -113,22 +113,24 @@ class ASCAT(Satellite):
         fig_handler.drawcoastlines()
         fig_handler.drawstates()
         fig_handler.drawcountries()
-        fig_handler.drawparallels(np.arange(-90.,91.,30.))
+        fig_handler.drawparallels(np.arange(-60.,60.,15.))
         fig_handler.drawmeridians(np.arange(0.,360.,60.))
+        #cb_axis = fig_handler.add_axes([0.05, 0.80, 0.9, 0.15])
 
         #sigo tutoriales, proyecto lat y lon
 
         x,y = fig_handler(longitudes,latitudes)
 
         bounds = [0,10]
-        #norm = mpl.colors.Normalize(vmin=0, vmax=50)
-        cs = fig_handler.pcolor(x,y,velviento.data,cmap=cmap)
+        #norm = mpl.colors.Normalize(vmin=0, vmax=40)
+        cs = fig_handler.pcolor(x,y,velviento.data,cmap=cmap, vmin=0,\
+            vmax=30)
+        #cb = mpl.colorbar.ColorbarBase(cs, cmap=cmap, norm=norm)
         #cb = fig_handler.colorbar(cs,"right", size="5%", pad='2%',\
             #boundaries=bounds)
         cb = fig_handler.colorbar(cs,"right", size="5%", pad='2%')
-        #cb = mpl.colorbar.ColorbarBase(cs, cmap=cmap, norm=norm)
         cb.set_label('m/s')
-        cb.set_clim(vmin=0, vmax=40)#CON ESTO LE DIGO DONDE SATURA
+        #cb.set_clim(vmin=0, vmax=40)#CON ESTO LE DIGO DONDE SATURA
         #cb.ax.set_xlim([0, 40]) funciona mal
         cb.set_ticks([0, 10, 20, 30, 40])
 
