@@ -1,6 +1,11 @@
-# satelites
+
+
+# Satelites
+Trabajo Práctico del Workshop en técnicas en programación científica 2016
 
 Este directorio contiene un programa que plotea mediciones de velocidad de viento realizadas por satelites en un intervalo de fechas asignado por el usuario.
+
+![Ejemplo de las observaciones del satelite Metop A (ASCAT)](whole_as.png "Ejemplo de las observaciones del satelite Metop A (ASCAT)")
 
 
 ## Producto ploteado
@@ -9,11 +14,21 @@ A la fecha el programa esta implementado unicamente para productos obtenidos del
 
 El producto extraido para el ploteo es velocidad del viento sobre superficie oceanica con una resolucion de muestreo de 25 km. El intervalo de tiempo maximo de datos disponibles es [2012-2016].
 
-El set de datos se descarga de directorio 
-http://podaac-opendap.jpl.nasa.gov/opendap/allData/ascat/preview/L2/metop_b/25km/
-MARKDOWN
+El set de datos se descarga de directorio de [PODAAC-OPENDAP](http://podaac-opendap.jpl.nasa.gov/opendap/allData/ascat/preview/L2/metop_b/25km/)
 
-En overview.md se describen las librerias implemetadas en el programa principal y los modulos.
+#Archivos
+
+`main.py` Cuerpo principal del programa. Este es el archivo a ejecutar por el usuario. Solicita fecha inicial y final de datos a plotear (en ese orden separados por space), con formato YYYY.MM.DD
+.
+ Opcion flag para eliminar datos de satelite no deseado
+--no-[nombre_de_satelite] 
+
+`satelite.py` Se define clase satelite y sus metodos.
+
+`lalalala.py` modulo que plotea en mapa global 2D.
+
+
+Ver `overview.md` para una descripcion de la estructura del programa y las librerias implemetadas.
 
 
 
