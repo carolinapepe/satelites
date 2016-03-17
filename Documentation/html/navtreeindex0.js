@@ -1,0 +1,25 @@
+var NAVTREEINDEX0 =
+{
+"ejemplo__lectura__nc_8py.html":[1,0,0],
+"ejemplo__lectura__nc_8py_source.html":[1,0,0],
+"files.html":[1,0],
+"get__links_8py.html":[1,0,1],
+"get__links_8py_source.html":[1,0,1],
+"index.html":[],
+"main_8py.html":[1,0,2],
+"main_8py_source.html":[1,0,2],
+"namespaceejemplo__lectura__nc.html":[0,0,0],
+"namespaceget__links.html":[0,0,1],
+"namespacemain.html":[0,0,2],
+"namespaceprueba.html":[0,0,3],
+"namespaceread__data.html":[0,0,4],
+"namespaces.html":[0,0],
+"namespacesatellite.html":[0,0,5],
+"pages.html":[],
+"prueba_8py.html":[1,0,3],
+"prueba_8py_source.html":[1,0,3],
+"read__data_8py.html":[1,0,4],
+"read__data_8py_source.html":[1,0,4],
+"satellite_8py.html":[1,0,5],
+"satellite_8py_source.html":[1,0,5]
+};

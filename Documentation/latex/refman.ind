@@ -1,0 +1,37 @@
+\begin{theindex}
+
+  \item {ejemplo\discretionary {-}{}{}\_\discretionary {-}{}{}lectura\discretionary {-}{}{}\_\discretionary {-}{}{}nc}, 
+		\hyperpage{5}
+  \item {ejemplo\discretionary {-}{}{}\_\discretionary {-}{}{}lectura\discretionary {-}{}{}\_\discretionary {-}{}{}nc.\discretionary {-}{}{}py}, 
+		\hyperpage{7}
+
+  \indexspace
+
+  \item {get\discretionary {-}{}{}\_\discretionary {-}{}{}links}, 
+		\hyperpage{5}
+  \item {get\discretionary {-}{}{}\_\discretionary {-}{}{}links.\discretionary {-}{}{}py}, 
+		\hyperpage{7}
+
+  \indexspace
+
+  \item {main}, \hyperpage{5}
+  \item {main.\discretionary {-}{}{}py}, \hyperpage{7}
+
+  \indexspace
+
+  \item {prueba}, \hyperpage{5}
+  \item {prueba.\discretionary {-}{}{}py}, \hyperpage{7}
+
+  \indexspace
+
+  \item {read\discretionary {-}{}{}\_\discretionary {-}{}{}data}, 
+		\hyperpage{5}
+  \item {read\discretionary {-}{}{}\_\discretionary {-}{}{}data.\discretionary {-}{}{}py}, 
+		\hyperpage{7}
+
+  \indexspace
+
+  \item {satellite}, \hyperpage{5}
+  \item {satellite.\discretionary {-}{}{}py}, \hyperpage{7}
+
+\end{theindex}

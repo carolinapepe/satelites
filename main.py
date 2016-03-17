@@ -2,17 +2,10 @@
 
 import argparse 
 import satellite
-import datetime
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 import glob
 import os.path
-    
-def construct_site_list(not_in_list):
-
-    all_sites = ['ASCAT', 'OTROSAT','OTROSAT2']
-    sites = list(set(all_sites) - set(not_in_list))
-    return sites
 
 def plot_data_matrix(data_matrix):
     pass
@@ -25,58 +18,40 @@ def clean():
 
 def main():
   
-	#define parser data
+	# Define parser data
     parser = argparse.ArgumentParser(description='Plotting satellite data.')
-    #first arguments. Dates. TODO:SPECIFY INITIAL AND FINAL ORDER
-    parser.add_argument('date', metavar='date_time_YYYY.MM.DD', type=str, nargs=2,\
-		      help='time interval')
-    #specify sattelites to exclude from command line. TODO: change to flag!
-    parser.add_argument('satellite', metavar='SATELLITE_NAME', type=str, nargs='?',\
-		      help='satellite name')
+    # First arguments. Dates. TODO:SPECIFY INITIAL AND FINAL ORDER
+    parser.add_argument('date', metavar='YYYY.MM.DD YYYY.MM.DD', type=str, nargs=2,\
+		      help='Initial date followed by end date')
+    # Specify sattelites to exclude from command line. TODO: change to flag!
+    parser.add_argument('--no-ascat', dest='ascat_bool', action="store_true", \
+		      default= False, help="Don't display ASCAT information")
 
+    # Extract dates from args
     args=parser.parse_args()
     initialDate = args.date[0]
     finalDate = args.date[1]
     
-    #construct list of satellites to exclude
-    if not args.satellite:
-        not_in_list = []
-    else:
-        not_in_list = args.satellite.split('+')
-    
-    #construct definite list
-    sites = construct_site_list(not_in_list)
-    
-    #ASCAT implementation. 
-    ascat = satellite.ASCAT(initialDate, finalDate)
-    ascat.convert_to_datetime()
-    #ascat.download_files()
-    
-    # Figure
-    m = Basemap(projection='merc',llcrnrlat=-80,urcrnrlat=80,\
-            llcrnrlon=0,urcrnrlon=360,lat_ts=20,resolution='c')
-    
-    # Color bar
-    #
-    cmap = plt.cm.jet
-    # extract all colors from the .jet map
-    cmaplist = [cmap(i) for i in range(cmap.N)]
-    # force the first color entry to be grey
-    cmaplist[0] = (.5,.5,.5,0.0)
-    # create the new map
-    cmap = cmap.from_list('Custom cmap', cmaplist, cmap.N)
-    
-    for src_name in glob.glob(os.path.join("/tmp", '*.nc')):
-        base = os.path.basename(src_name)
-        ascat.plot_data(src_name, m,cmap)
-        
-    plt.title('Sfc Wind Speed') #agregar fecha y dato del satelite
+    # Flow control depending on specified options
+    if not args.ascat_bool:
+        # Instantiate ASCAT and get datetime object
+        ascat = satellite.ASCAT(initialDate, finalDate)
+        ascat.get_datetime_object()
+        # Download files from ASCAT servers
+        #ascat.download_files()
+        # Get figure handler and colormap
+        m, cmap = satellite.generate_figure()   
+        # Process for every *.nc file in folder
+        for src_name in glob.glob(os.path.join("/tmp", '*.nc')):
+            base = os.path.basename(src_name)
+            lat, lon, data = ascat.extract_data(src_name)
+            satellite.plot_data(m, lat, lon, data, cmap)
+        # Finalize plot design and show it
+        plt.title('ASCAT - Sfc Wind Speed')
+        plt.show()
 
-    plt.show()
-    #future implementation for several satellites
-    #for site in sites:
-    #    pass
-        #a_satellite = satellite.Satellite(args.satellite[0],initialDate, finalDate)
+    else:
+        print "You've discarded all the satellites I know!"
 
 if __name__ == "__main__":
     #clean()
