@@ -9,6 +9,7 @@ import calendar
 import numpy as np
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 from netCDF4 import Dataset
 
 
@@ -92,7 +93,7 @@ class ASCAT(Satellite):
         faltante=wind_speed._FillValue
 
         velviento.data[velviento.data==faltante] = np.nan
-
+        print np.nanmax(velviento.data)
         #agrego scale factor a las latitudes
 
         latitudes = lat[:,:]# /lat.scale_factor
@@ -120,11 +121,16 @@ class ASCAT(Satellite):
         x,y = fig_handler(longitudes,latitudes)
 
         bounds = [0,10]
+        #norm = mpl.colors.Normalize(vmin=0, vmax=50)
         cs = fig_handler.pcolor(x,y,velviento.data,cmap=cmap)
-        cb = fig_handler.colorbar(cs,"right", size="5%", pad='2%',\
-            boundaries=bounds)
+        #cb = fig_handler.colorbar(cs,"right", size="5%", pad='2%',\
+            #boundaries=bounds)
+        cb = fig_handler.colorbar(cs,"right", size="5%", pad='2%')
+        #cb = mpl.colorbar.ColorbarBase(cs, cmap=cmap, norm=norm)
         cb.set_label('m/s')
-
+        cb.set_clim(vmin=0, vmax=40)#CON ESTO LE DIGO DONDE SATURA
+        #cb.ax.set_xlim([0, 40]) funciona mal
+        cb.set_ticks([0, 10, 20, 30, 40])
 
 
 
