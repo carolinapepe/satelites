@@ -13,7 +13,7 @@ from netCDF4 import Dataset
 #creo objeto netcdf
 #ACA NECESITO COMO INPUT FILENAME
 
-f=Dataset("/tmp/ascat_20150803_000900_metopb_14908_eps_o_250_2201_ovw.l2.nc","r")
+f=Dataset("./ascat_20150805_010600_metopb_14937_eps_o_250_2201_ovw.l2.nc.gz.nc","r")
 
 #extraigo latitudes, longitudes, tiempos
 #ACA NECESITO COMO INPUT EL NOMBRE DE LAS LATITUDES
@@ -35,6 +35,10 @@ faltante=wind_speed._FillValue
 
 velviento.data[velviento.data==faltante] = np.nan
 
+#POR    QUE NO FUNCIONA?
+#velviento.data[velviento.data==0] = np.nan
+print np.nanmax(velviento.data), np.nanmin(velviento.data)
+
 #agrego scale factor a las latitudes
 
 latitudes = lat[:,:]# /lat.scale_factor
@@ -50,18 +54,20 @@ ntimes,nobs = np.shape(velviento)
 # of the map.
 # lat_ts is the latitude of true scale.
 # resolution = 'c' means use crude resolution coastlines.
-m = Basemap(projection='merc',llcrnrlat=-80,urcrnrlat=80,\
-            llcrnrlon=-180,urcrnrlon=180,lat_ts=20,resolution='c')
+
 #dibujo costas, etc
-m.drawcoastlines()
-m.drawstates()
-m.drawcountries()
-m.drawparallels(np.arange(-90.,91.,30.))
-m.drawmeridians(np.arange(-180.,181.,60.))
+fig_handler = Basemap(projection='merc',llcrnrlat=-80,urcrnrlat=80,\
+            llcrnrlon=0,urcrnrlon=360,lat_ts=20,resolution='c')
+    
+fig_handler.drawcoastlines()
+fig_handler.drawstates()
+fig_handler.drawcountries()
+fig_handler.drawparallels(np.arange(-90.,91.,30.))
+fig_handler.drawmeridians(np.arange(-180.,181.,60.))
 
 #sigo tutoriales, proyecto lat y lon
 
-x,y = m(longitudes,latitudes)
+x,y = fig_handler(longitudes,latitudes)
 
 # define the colormap
 cmap = plt.cm.jet
@@ -72,8 +78,8 @@ cmaplist[0] = (.5,.5,.5,0.0)
 # create the new map
 cmap = cmap.from_list('Custom cmap', cmaplist, cmap.N)
 
-cs = m.pcolor(x,y,velviento.data,cmap=cmap)
-cb = m.colorbar(cs,"right", size="5%", pad='2%')
+cs = fig_handler.pcolor(x,y,velviento.data,cmap=cmap)
+cb = fig_handler.colorbar(cs,"right", size="5%", pad='2%')
 cb.set_label('m/s')
 
 plt.title('Sfc Wind Speed') #agregar fecha y dato del satelite
